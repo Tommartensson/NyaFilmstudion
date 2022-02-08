@@ -26,6 +26,7 @@ namespace Filmstudion.Repositories
         {
             var allStudios = await _context.FilmStudios.ToListAsync();
 
+           
             return allStudios;
         }
         public async Task<FilmStudio> Create(RegisterFilmStudio Filmstudio)

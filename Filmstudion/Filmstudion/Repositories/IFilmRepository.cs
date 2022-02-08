@@ -11,5 +11,9 @@ namespace Filmstudion.Repositories
         Task<IEnumerable<Film>> Get();
 
         Task<Film> GetById(int id);
+
+        Task<bool> SaveChangesAsync();
+
+        Task<Film> Create(CreateFilm movie);
     }
 }

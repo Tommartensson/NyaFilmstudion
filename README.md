@@ -3,7 +3,7 @@ Max poäng: 1p
 
     Läranderesultat: 3
 
-
+Färdig
 
 2: API:et ska tillhandahålla resurserna "film" och "filmstudio".
 Max poäng: 2p
@@ -14,7 +14,7 @@ Max poäng: 2p
     Klassen “FilmStudio” ska finnas på följande plats Models/FilmStudio/FilmStudio.cs
     Klassen Film ska ha uppfyllt interfacet IFilm.
     Klassen FilmStudio ska ha uppfyllt interfacet IFilmStudio.
-
+Färdig
 
 
 3: En filmstudio ska kunna registrera sig via API:et
@@ -46,7 +46,7 @@ Max poäng: 2p
     Ett lyckat anrop ska returnera statuskod 200.
         Det är viktigt att gömma känslig information. Vid returnering av förbjuden data görs poängavdrag
 
-
+Färdig
 
 5: Både filmstudios och administratörer ska kunna autentisera sig via API:et.
 Max poäng: 3p
@@ -89,7 +89,7 @@ Max poäng: 3p
     Ett lyckat anrop med en oautentiserad användare eller en autentiserad filmstudio ska ge tillbaka ett json-objekt som, parse:at till C#, är en array av objekt som uppfyller interface:et IFilmStudio.cs men som INTE innehåller listan RentedFilmCopies eller egenskapen City.
     Ett lyckat anrop med en autentiserad admin ska innehålla alla egenskaper i objektet, även listan med RentedFilmCopies och dess innehåll.
 
-
+Färdig
 
 8: Via Webb-API:et ska informationen om en enskild filmstudio kunna hämtas
 Max poäng: 2p

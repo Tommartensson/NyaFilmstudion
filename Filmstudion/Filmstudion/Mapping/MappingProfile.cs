@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using filmstudion.api.Models;
 using Filmstudion.Models.Authentication;
+using Filmstudion.Models.Film;
 using Filmstudion.Models.Filmstudio;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,10 @@ namespace Filmstudion.Mapping
         {
             this.CreateMap<IRegisterFilmStudio, FilmStudio>().ReverseMap();
             this.CreateMap<User, AdminResults>().ReverseMap();
+            this.CreateMap<IFilm, Film>().ReverseMap();
+            this.CreateMap<FilmStudio, FilmStudioAsUnauthorized>().ReverseMap();
+            this.CreateMap<User, UserResults>().ReverseMap();
+            this.CreateMap<CreateFilm, Film>().ReverseMap();
         }
     }
 }
