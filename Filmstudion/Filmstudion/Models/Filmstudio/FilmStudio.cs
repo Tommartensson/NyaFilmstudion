@@ -13,5 +13,7 @@ namespace Filmstudion.Models.Filmstudio
         public string Name { get; set; }
         public string City { get; set; }
         public List<FilmCopy> RentedFilmCopies { get; set; }
+
+     
     }
 }

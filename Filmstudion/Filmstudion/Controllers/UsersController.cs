@@ -51,7 +51,7 @@ namespace Filmstudion.Controllers
             }
             
             var adminResults = _mapper.Map<User, AdminResults>(newUser);
-            return Created("", adminResults);
+            return Ok(adminResults);
         }
         [Route("Authenticate")]
         [HttpPost]
@@ -72,7 +72,10 @@ namespace Filmstudion.Controllers
                             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                             new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
-                            new Claim("role", user.Role)
+                            new Claim("userId", user.UserId.ToString()),
+                            new Claim("role", user.Role),
+
+
 
                         };
 

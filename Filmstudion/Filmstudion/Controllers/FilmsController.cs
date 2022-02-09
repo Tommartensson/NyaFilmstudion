@@ -22,34 +22,58 @@ namespace Filmstudion.Controllers
         private readonly IFilmRepository _repository;
         private readonly LinkGenerator _link;
         private readonly IMapper _mapper;
-        public FilmsController(IFilmRepository repository, LinkGenerator link, IMapper mapper)
+        private readonly IFilmStudioRepository _studio;
+        public FilmsController(IFilmRepository repository, LinkGenerator link, IMapper mapper, IFilmStudioRepository studio)
         {
             _link = link;
             _repository = repository;
             _mapper = mapper;
+            _studio = studio;
         }
+        [AllowAnonymous]
         [HttpGet]
-
-        public async Task<ActionResult<IEnumerable<Film>>> Get()
+        public async Task<ActionResult<IEnumerable<Films>>> Get()
         {
             try
             {
                 var result = await _repository.Get();
-                
-                return Ok(result);
+                if (User.IsInRole("Admin") || User.IsInRole("FilmStudio"))
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    var allFilmsWithoutLoan = result.Select(n =>
+                    {
+                        var newFilm = _mapper.Map<Films, FilmAsUnauthorized>(n);
+                        return newFilm;
+                    });
+
+                    return Ok(allFilmsWithoutLoan);
+                }
             }
             catch (Exception err)
             {
                 return BadRequest(err);
             }
         }
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<string>> Get(int id)
         {
             try
             {
                 var result = await _repository.GetById(id);
-                return Ok(result);
+                if (User.IsInRole("Admin") || User.IsInRole("FilmStudio"))
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    var newFilm = _mapper.Map<Films, FilmAsUnauthorized>(result);
+                    return Ok(newFilm);
+                }
+
             }
             catch (Exception err)
             {
@@ -64,46 +88,141 @@ namespace Filmstudion.Controllers
         {
             try
             {
-               
-                    var location = _link.GetPathByAction("Get", "Films", new { name = Film.Name });
-                    if (string.IsNullOrWhiteSpace(location))
-                    {
-                        return BadRequest("Couldnt use current name");
-                    }
 
-                    var newMovie = await _repository.Create(Film);
-                    return Created("", newMovie);
-               
+                var location = _link.GetPathByAction("Get", "Films", new { name = Film.Name });
+                if (string.IsNullOrWhiteSpace(location))
+                {
+                    return BadRequest("Couldnt use current name");
+                }
+
+                var newMovie = await _repository.Create(Film);
+                return Ok(newMovie);
+
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 return BadRequest(err);
             }
         }
 
 
-
         [HttpPatch("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Film>> Put(int id, [FromBody] Film movie)
+        public async Task<ActionResult<Films>> Patch(int id, [FromBody] Films movie)
         {
             try
             {
                 var oldMovie = await _repository.GetById(id);
-                if (oldMovie == null) NotFound("Couldnt not find");
+                if (oldMovie == null) return NotFound("Couldnt not find");
 
 
+                _mapper.Map(movie, oldMovie);
                 if (await _repository.SaveChangesAsync())
                 {
-                    var newMovie = _mapper.Map<Film>(oldMovie);
-                    return Ok(newMovie);
+
+                    return Ok(oldMovie);
                 }
             }
-            catch
+            catch (Exception err)
             {
-                return BadRequest("DataBase Failure");
+                return BadRequest(err);
             }
             return BadRequest();
+        }
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<Films>> Update(int id, [FromBody] Films movie)
+        {
+            try
+            {
+                var oldMovie = await _repository.GetById(id);
+                if (oldMovie == null) return NotFound("Couldnt not find");
+
+
+                _mapper.Map(movie, oldMovie);
+                if (await _repository.SaveChangesAsync())
+                {
+
+                    return Ok(oldMovie);
+                }
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err);
+            }
+            return BadRequest();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("rent")]
+        public async Task<ActionResult<Films>> LoanFilm([FromQuery]int id, int StudioId)
+        {
+            try{
+                var film = await _repository.GetById(id);
+                var filmStudio = await _studio.GetById(StudioId);
+               
+                if(film == null)
+                {
+                    return Conflict("This film does not exist");
+                }
+                if (film.NumberOfCopies == 0)
+                {
+                    return Conflict("We have no copies atm");
+                }
+                if (filmStudio == null)
+                {
+                    return Conflict("This Filmstudio does not exist");
+                }
+                if (StudioId == int.Parse(User.Claims.Where(n => n.Type == "userId").FirstOrDefault()?.Value))
+                {
+                    film.NumberOfCopies = film.NumberOfCopies - 1;
+                    await _repository.AddLoan(film, filmStudio);
+                    return Ok();
+                }
+                else
+                {
+                    return Conflict("You are not authorized to loan as someone else");
+                }
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err);
+            }
+
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("return")]
+        public async Task<ActionResult<Films>> GiveBackFilm([FromQuery] int id, int StudioId)
+        {
+            try
+            {
+                var film = await _repository.GetById(id);
+                var filmStudio = await _studio.GetById(StudioId);
+                if (film == null)
+                {
+                    return Conflict("This film does not exist");
+                }
+                if (filmStudio == null)
+                {
+                    return Conflict("This Filmstudio does not exist");
+                }
+                if (StudioId == int.Parse(User.Claims.Where(n => n.Type == "userId").FirstOrDefault()?.Value))
+                {
+                    film.NumberOfCopies = film.NumberOfCopies + 1;
+                    await _repository.RemoveLoan(film, filmStudio);
+                    return Ok();
+                }
+                else
+                {
+                    return Conflict("You are not authorized to give back a film as someone else");
+                }
+            }
+            catch (Exception err)
+            {
+                return BadRequest(err);
+            }
+
         }
     }
 }

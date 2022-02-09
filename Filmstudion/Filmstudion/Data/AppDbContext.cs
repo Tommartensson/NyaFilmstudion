@@ -1,6 +1,7 @@
 ﻿using Filmstudion.Models.Authentication;
 using Filmstudion.Models.Film;
 using Filmstudion.Models.Filmstudio;
+using Filmstudion.Models.Loan;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,9 +13,9 @@ namespace Filmstudion
 {
     public class AppDbContext : IdentityDbContext<User>
     {
-        public DbSet<Film> Films { get; set; }
+        public DbSet<Films> Films { get; set; }
         public DbSet<FilmStudio> FilmStudios { get; set; }
-        //public DbSet<MovieLoan> MovieLoan { get; set; }
+        public DbSet<FilmCopy> FilmCopy { get; set; }
 
 
 
@@ -29,25 +30,25 @@ namespace Filmstudion
             base.OnModelCreating(builder);
 
 
-            builder.Entity<Film>().ToTable("Movies");
-            builder.Entity<Film>().HasKey(p => p.FilmId);
-            builder.Entity<Film>().Property(p => p.FilmId).IsRequired();
+            builder.Entity<Films>().ToTable("Movies");
+            builder.Entity<Films>().HasKey(p => p.FilmId);
+            builder.Entity<Films>().Property(p => p.FilmId).IsRequired();
             
-            builder.Entity<Film>().Property(p => p.Name);
-            builder.Entity<Film>().Property(p => p.ReleaseDate);
-            builder.Entity<Film>().Property(p => p.Country);
-            builder.Entity<Film>().Property(p => p.Director);
+            builder.Entity<Films>().Property(p => p.Name);
+            builder.Entity<Films>().Property(p => p.ReleaseDate);
+            builder.Entity<Films>().Property(p => p.Country);
+            builder.Entity<Films>().Property(p => p.Director);
 
 
 
-            builder.Entity<Film>().HasData
+            builder.Entity<Films>().HasData
                 (
-                new Film { FilmId = 1, Name = "LoR", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1998) },
-                new Film { FilmId = 2, Name = "Transformers", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(2000) },
-                new Film { FilmId = 3, Name = "Ted", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1997) },
-                new Film { FilmId = 4, Name = "Backstage", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1990) },
-                new Film { FilmId = 5, Name = "TMNT", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1991) },
-                new Film { FilmId = 6, Name = "Star-wars", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1992) }
+                new Films { FilmId = 1, Name = "LoR", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1998), NumberOfCopies= 3 },
+                new Films { FilmId = 2, Name = "Transformers", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(2000), NumberOfCopies = 1 },
+                new Films { FilmId = 3, Name = "Ted", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1997), NumberOfCopies = 3 },
+                new Films { FilmId = 4, Name = "Backstage", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1990), NumberOfCopies = 3 },
+                new Films { FilmId = 5, Name = "TMNT", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1991), NumberOfCopies = 3 },
+                new Films { FilmId = 6, Name = "Star-wars", Country = "Sweden", Director = "blank", ReleaseDate = new DateTime(1992), NumberOfCopies = 3 }
 
 
             ) ;

@@ -15,5 +15,7 @@ namespace Filmstudion
         Task<IEnumerable<FilmStudio>> Get();
 
         Task<FilmStudio> GetById(int id);
+
+        Task<IEnumerable<FilmStudio>> GetAsAdmin();
     }
 }
