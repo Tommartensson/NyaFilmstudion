@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "h0A2SF5DnzGSA9RDb51efOWvLrVOEdf7vdCMD4R67NZmp4Uo5V8mjlF2osboPEOKmXY/7mbYR5OCdmykNNGW/g==",
+  "dgSpecHash": "D/Jhod8MQxADTpAerZJjQ4veuFlg/cTygsspWtkhefy23rR55D0SPUJmLSWAZJqYi1FFZ6fUoa7kee0wLS9ZYg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\Filmstudion\\Filmstudion\\Filmstudion.csproj",
+  "projectFilePath": "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\filmstudion\\filmstudion\\Filmstudion.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tom\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\Tom\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\8.1.1\\automapper.extensions.microsoft.dependencyinjection.8.1.1.nupkg.sha512",
