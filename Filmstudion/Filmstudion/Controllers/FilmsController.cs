@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using filmstudion.api.Models;
+using Filmstudion.Models.Authentication;
 using Filmstudion.Models.Film;
 using Filmstudion.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -115,8 +116,9 @@ namespace Filmstudion.Controllers
                 var oldMovie = await _repository.GetById(id);
                 if (oldMovie == null) return NotFound("Couldnt not find");
 
-
+               
                 _mapper.Map(movie, oldMovie);
+                oldMovie.FilmId = id;
                 if (await _repository.SaveChangesAsync())
                 {
 
@@ -131,7 +133,8 @@ namespace Filmstudion.Controllers
         }
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Films>> Update(int id, [FromBody] Films movie)
+        
+        public async Task<ActionResult<Films>> Update(int id, [FromBody] numberOfCopies numberOfCopies)
         {
             try
             {
@@ -139,7 +142,7 @@ namespace Filmstudion.Controllers
                 if (oldMovie == null) return NotFound("Couldnt not find");
 
 
-                _mapper.Map(movie, oldMovie);
+                oldMovie.NumberOfCopies = numberOfCopies.NumberOfCopies;
                 if (await _repository.SaveChangesAsync())
                 {
 

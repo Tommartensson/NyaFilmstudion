@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\filmstudion\\filmstudion\\Filmstudion.csproj": {}
+    "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\Filmstudion\\Filmstudion\\Filmstudion.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\filmstudion\\filmstudion\\Filmstudion.csproj": {
+    "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\Filmstudion\\Filmstudion\\Filmstudion.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\filmstudion\\filmstudion\\Filmstudion.csproj",
+        "projectUniqueName": "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\Filmstudion\\Filmstudion\\Filmstudion.csproj",
         "projectName": "Filmstudion",
-        "projectPath": "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\filmstudion\\filmstudion\\Filmstudion.csproj",
+        "projectPath": "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\Filmstudion\\Filmstudion\\Filmstudion.csproj",
         "packagesPath": "C:\\Users\\Tom\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\filmstudion\\filmstudion\\obj\\",
+        "outputPath": "C:\\Users\\Tom\\Desktop\\Repos\\Dynamiska webbsystem 2\\NyaFilmstudion\\Filmstudion\\Filmstudion\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Tom\\AppData\\Roaming\\NuGet\\NuGet.Config",

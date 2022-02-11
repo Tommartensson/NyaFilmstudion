@@ -27,6 +27,7 @@ fetch("../api/Films")
         showMyMovies(Token, userId);
     })
     let logout = document.createElement("button")
+    main.insertAdjacentElement("afterend", logout)
             logout.innerHTML = "Logga ut"
             logout.addEventListener("click", function(){
                 location.reload();
@@ -85,7 +86,7 @@ Login.addEventListener("click", function(){
             let Token = isAuth.token
             main.innerHTML = showFilms(Token, id)
     })
-    .catch(alert("Du kunde inte logga in"))
+    .catch(console.log("Du kunde inte logga in"))
 })
 
 button.addEventListener("click", function() {
@@ -120,7 +121,7 @@ function showMyMovies(Token, userId)
             main.insertAdjacentHTML("afterbegin", "<div id='"+myfilms.filmId +"'>" + myfilms.name  + "</br>" + myfilms.director + "</br>")  
             let button = document.createElement("button")
             button.setAttribute("id", myfilms.filmId)
-            button.innerHTML = "Låna";
+            button.innerHTML = "Lämna tillbaka";
             main.insertAdjacentElement("afterbegin", button)
             button.addEventListener("click", function(event){
                 event.preventDefault()
