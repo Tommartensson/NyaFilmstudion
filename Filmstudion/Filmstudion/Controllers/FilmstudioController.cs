@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Filmstudion.Models.Authentication;
 using Filmstudion.Models.Filmstudio;
+using Filmstudion.Models.Loan;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -13,6 +16,7 @@ namespace Filmstudion.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class FilmstudioController : Controller
     {
         private readonly IFilmStudioRepository _repository;
@@ -27,34 +31,51 @@ namespace Filmstudion.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
-
         public async Task<ActionResult<IEnumerable<FilmStudio>>> Get()
         {
             try
             {
-                var result = await _repository.Get();
-                var allStudiosWithoutLoan = result.Select(n =>
+                if (!User.IsInRole("Admin"))
                 {
-                    var StudioResults = _mapper.Map<FilmStudioAsUnauthorized>(n);
-                    return StudioResults;
-                });
+                    var result = await _repository.Get();
+                    var allStudiosWithoutLoan = result.Select(n =>
+                    {
+                        var StudioResults = _mapper.Map<FilmStudio, FilmStudioAsUnauthorized>(n);
+                        return StudioResults;
+                    });
 
-                return Ok(allStudiosWithoutLoan);
+                    return Ok(allStudiosWithoutLoan);
+
+                }
+                else
+                {
+                    var resultWithLoan = await _repository.GetAsAdmin();
+                    return Ok(resultWithLoan);
+                }
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 return BadRequest(err);
             }
         }
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<string>> Get(int id)
         {
             try
             {
                 var result = await _repository.GetById(id);
-
-                return Ok(result);
+                if (User.IsInRole("Admin") || id == int.Parse(User.Claims.Where(n => n.Type == "userId").FirstOrDefault()?.Value))
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    var StudioResults = _mapper.Map<FilmStudio, FilmStudioAsUnauthorized>(result);
+                    return Ok(StudioResults);
+                }
             }
             catch (Exception err)
             {
@@ -62,7 +83,7 @@ namespace Filmstudion.Controllers
             }
         }
 
-
+        [AllowAnonymous]
         [Route("register")]
         [HttpPost]
         public async Task<ActionResult<FilmStudio>> Post([FromBody] RegisterFilmStudio model)
@@ -75,15 +96,14 @@ namespace Filmstudion.Controllers
                     return BadRequest("Coldnt use this name");
                 }
 
-
-
                 var newModel = await _repository.Create(model);
                 var newFilmStudio = new User
                 {
                     UserName = model.Username,
                     Password = model.Password,
                     FilmStudioId = newModel.FilmStudioId,
-                    Role = "FilmStudio"
+                    Role = "FilmStudio",
+                    UserId = newModel.FilmStudioId
 
                 };
                 var CreatedFilmStudio = await _user.CreateAsync(newFilmStudio, newFilmStudio.Password);
@@ -93,10 +113,11 @@ namespace Filmstudion.Controllers
                 }
                 return Created("", newModel);
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 return BadRequest(err);
             }
+
         }
     }
 }

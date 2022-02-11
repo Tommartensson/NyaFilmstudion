@@ -16,10 +16,11 @@ namespace Filmstudion.Mapping
         {
             this.CreateMap<IRegisterFilmStudio, FilmStudio>().ReverseMap();
             this.CreateMap<User, AdminResults>().ReverseMap();
-            this.CreateMap<IFilm, Film>().ReverseMap();
+            this.CreateMap<IFilm, Films>().ReverseMap();
             this.CreateMap<FilmStudio, FilmStudioAsUnauthorized>().ReverseMap();
             this.CreateMap<User, UserResults>().ReverseMap();
-            this.CreateMap<CreateFilm, Film>().ReverseMap();
+            this.CreateMap<CreateFilm, Films>().ReverseMap();
+            this.CreateMap<Films, FilmAsUnauthorized>().ReverseMap();
         }
     }
 }

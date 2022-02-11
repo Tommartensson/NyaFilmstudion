@@ -26,8 +26,27 @@ namespace Filmstudion.Repositories
         {
             var allStudios = await _context.FilmStudios.ToListAsync();
 
-           
             return allStudios;
+        }
+        public async Task<IEnumerable<FilmStudio>> GetAsAdmin()
+        {
+            var allStudios = await _context.FilmStudios.ToListAsync();
+            var allLoans = await _context.FilmCopy.ToListAsync();
+            var allFilms = await _context.Films.ToListAsync();
+
+            var allStudiosWithLoan = allStudios.Select(n =>
+            {
+
+                n.RentedFilmCopies = allLoans.FindAll(l => l.FilmStudioId == n.FilmStudioId);
+                allFilms.Select(n =>
+                {
+                    var movie = allLoans.FindAll(l => l.FilmId == n.FilmId);
+                    return movie;
+                });
+                return n;
+            });
+
+            return allStudiosWithLoan;
         }
         public async Task<FilmStudio> Create(RegisterFilmStudio Filmstudio)
         {
@@ -48,10 +67,13 @@ namespace Filmstudion.Repositories
             //Klar
             
             var allMovies = await _context.FilmStudios.ToListAsync();
+            var allLoans = await _context.FilmCopy.ToListAsync();
             IQueryable<FilmStudio> query = _context.FilmStudios;
 
             query = query.Where(c => c.FilmStudioId == id);
             var FilmStudio = await query.FirstOrDefaultAsync();
+
+            FilmStudio.RentedFilmCopies = allLoans.FindAll(l => l.FilmStudioId == FilmStudio.FilmStudioId);
 
             return FilmStudio;
         }
